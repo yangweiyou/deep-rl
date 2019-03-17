@@ -40,3 +40,12 @@ luac.out
 *.hex
 
 .DS_Store
+
+#Result data
+__pycache__
+results
+
+#IDE
+.idea
+
+*.pyc

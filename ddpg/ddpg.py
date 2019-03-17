@@ -256,6 +256,10 @@ def train(sess, env, args, actor, critic, actor_noise):
     # Set up summary Ops
     summary_ops, summary_vars = build_summaries()
 
+    # Add ops to save and restore all the variables.
+    #saver = tf.train.Saver()
+    #saver.restore(sess, "/home/yangwei/projects/python/tensorflow/venv/deep-rl/ddpg/results/model/model.ckpt")
+
     sess.run(tf.global_variables_initializer())
     writer = tf.summary.FileWriter(args['summary_dir'], sess.graph)
 
@@ -374,7 +378,13 @@ def main(args):
             else:
                 env = wrappers.Monitor(env, args['monitor_dir'], force=True)
 
+        # Add ops to save and restore all the variables.
+        # saver = tf.train.Saver()
+
         train(sess, env, args, actor, critic, actor_noise)
+
+        #save_path = saver.save(sess, "/home/yangwei/projects/python/tensorflow/venv/deep-rl/ddpg/results/model/model.ckpt")
+        #print("Model saved in path: %s" % save_path)
 
         if args['use_gym_monitor']:
             env.monitor.close()
@@ -393,7 +403,7 @@ if __name__ == '__main__':
     # run parameters
     parser.add_argument('--env', help='choose the gym env- tested on {Pendulum-v0}', default='Pendulum-v0')
     parser.add_argument('--random-seed', help='random seed for repeatability', default=1234)
-    parser.add_argument('--max-episodes', help='max num of episodes to do while training', default=50000)
+    parser.add_argument('--max-episodes', help='max num of episodes to do while training', default=150)
     parser.add_argument('--max-episode-len', help='max length of 1 episode', default=1000)
     parser.add_argument('--render-env', help='render the gym env', action='store_true')
     parser.add_argument('--use-gym-monitor', help='record gym results', action='store_true')
@@ -401,7 +411,7 @@ if __name__ == '__main__':
     parser.add_argument('--summary-dir', help='directory for storing tensorboard info', default='./results/tf_ddpg')
 
     parser.set_defaults(render_env=False)
-    parser.set_defaults(use_gym_monitor=True)
+    parser.set_defaults(use_gym_monitor=False)
     
     args = vars(parser.parse_args())
     
